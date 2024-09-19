@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown Timer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      text-align: center;
+      padding: 50px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    .countdown {
+      padding:10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      font-size: 2rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .label {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    input[type="datetime-local"] {
+      padding: 10px;
+      font-size: 1rem;
+      border: 2px solid #FF6F61;
+      border-radius: 50px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      background-color: #FF6F61;
+      color: white;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+     button:hover {
+      background-color: #ff8364;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Set Your Countdown</h1>
+    <div class="time-input">
+      <input type="datetime-local" id="cnt_date">
+      <button onclick="st_countdown()">Start Countdown</button>
+    </div>
+    <div class="countdown" id="cnttimer" style="display: none;">
+      <div>
+        <span id="days">00</span>
+        <div class="label">Days</div>
+      </div>
+      <div>
+        <span id="hours">00</span>
+        <div class="label">Hours</div>
+      </div>
+      <div>
+        <span id="mins">00</span>
+        <div class="label">mins</div>
+      </div>
+      <div>
+        <span id="secs">00</span>
+        <div class="label">secs</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let cntinterval;
+    function st_countdown() {
+      const inputt = document.getElementById('cnt_date').value;
+      const cnt_date = new Date(inputt).getTime();
+
+      if (isNaN(cnt_date)) {
+        alert("Please select a valid date and time.");
+        return;
+      }
+      document.getElementById('cnttimer').style.display = "flex";
+      if (cntinterval) clearInterval(cntinterval);
+      cntinterval = setInterval(() => {
+        const now = new Date().getTime();
+        const gap = cnt_date - now;
+
+        if (gap <= 0) {
+          clearInterval(cntinterval);
+          document.querySelector('.container').innerHTML = "<h1>The event has started!</h1>";
+          return;
+        }
+        const sec = 1000;
+        const min = sec * 60;
+        const hour = min * 60;
+        const day = hour * 24;
+        const days = Math.floor(gap / day);
+        const hours = Math.floor((gap % day) / hour);
+        const mins = Math.floor((gap % hour) / min);
+        const secs = Math.floor((gap % min) / sec);
+        document.getElementById('days').innerText = days < 10 ? "0" + days : days;
+        document.getElementById('hours').innerText = hours < 10 ? "0" + hours : hours;
+        document.getElementById('mins').innerText = mins < 10 ? "0" + mins : mins;
+        document.getElementById('secs').innerText = secs < 10 ? "0" + secs : secs;
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
